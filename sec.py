@@ -1,7 +1,14 @@
 import streamlit as st
 import pandas as pd
 import pickle as pi
-
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 # Load models
 models = {}
 algo = ['Naive Bayes', 'Decision Tree', 'Random Forest']
