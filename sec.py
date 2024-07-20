@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import pickle as pi
+st.set_page_config(page_title='Qpredict',page_icon=":tractor:")
+
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
