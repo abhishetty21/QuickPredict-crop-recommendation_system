@@ -1,0 +1,36 @@
+preset_data1 = {
+        'N': 90.0,
+        'P': 42.0,
+        'K': 43.0,
+        'temperature': 20.0,
+        'humidity': 48.0,
+        'ph': 6.5,
+        'rainfall': 222.0
+    }
+
+    preset_data2 = {
+        'N': 90.0,
+        'P': 42.0,
+        'K': 43.0,
+        'temperature': 20.0,
+        'humidity': 82.0,
+        'ph': 6.5,
+        'rainfall': 222.0
+    }
+
+    preset_data3 = {
+        'N': 94.0,
+        'P': 50.0,
+        'K': 19.0,
+        'temperature': 23.30355338,
+        'humidity': 73.62548442,
+        'ph': 5.873242491,
+        'rainfall': 97.59081274
+    }
+
+    if st.sidebar.button('Coffee'):
+        st.session_state.user_data = preset_data1
+    if st.sidebar.button('Rice'):
+        st.session_state.user_data = preset_data2
+    if st.sidebar.button('Maize'):
+        st.session_state.user_data = preset_data3
