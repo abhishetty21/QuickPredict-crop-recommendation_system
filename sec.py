@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle as pi
-st.set_page_config(page_title='Qpredict',page_icon=":tractor:")
+st.set_page_config(page_title='Qpredict', page_icon=":tractor:")
 
 hide_st_style = """
             <style>
@@ -11,6 +11,7 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # Load models
 models = {}
 algo = ['Naive Bayes', 'Decision Tree', 'Random Forest']
@@ -40,6 +41,7 @@ translations = {
         'rainfall': 'Rainfall (mm)',
         'Recommend': 'Recommend',
         'recommended_crop': 'Recommended Crop',
+        'enter_inputs': 'Please enter all input parameters.'
     },
     'hi': {
         'title': 'क्विक प्रेडिक्ट',
@@ -56,6 +58,7 @@ translations = {
         'rainfall': 'वर्षा (मिमी)',
         'Recommend': 'सिफारिश',
         'recommended_crop': 'अनुशंसित फसल',
+        'enter_inputs': 'कृपया सभी इनपुट पैरामीटर दर्ज करें।'
     },
     'kn': {
         'title': 'ಕ್ವಿಕ್ ಪ್ರಿಡಿಕ್ಟ್',
@@ -72,6 +75,7 @@ translations = {
         'rainfall': 'ಮಳೆ(ಮಿಮೀ)',
         'Recommend': 'ಶಿಫಾರಸು',
         'recommended_crop': 'ಶಿಫಾರಸು ಮಾಡಿದ ಬೆಳೆ',
+        'enter_inputs': 'ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಇನ್‌ಪುಟ್ ಪ್ಯಾರಾಮೀಟರ್‌ಗಳನ್ನು ನಮೂದಿಸಿ.'
     }
 }
 
@@ -112,25 +116,22 @@ if st.session_state.page == t['about']:
 elif st.session_state.page == t['input_params']:
     st.sidebar.header(t['input_params'])
 
-
     # Initialize user inputs
     if 'user_data' not in st.session_state:
         st.session_state.user_data = {
-            'N': 0.0,
-            'P': 0.0,
-            'K': 0.0,
-            'temperature': 0.0,
-            'humidity': 0.0,
-            'ph': 0.0,
-            'rainfall': 0.0
+            'N': None,
+            'P': None,
+            'K': None,
+            'temperature': None,
+            'humidity': None,
+            'ph': None,
+            'rainfall': None
         }
 
-    # Button to load preset data
-    
     def user_input_features():
-        N = st.sidebar.number_input(t['nitrogen'], value=st.session_state.user_data['N'], min_value=0.0)
-        P = st.sidebar.number_input(t['phosphorus'], value=st.session_state.user_data['P'], min_value=0.0)
-        K = st.sidebar.number_input(t['potassium'], value=st.session_state.user_data['K'], min_value=0.0)
+        N = st.sidebar.number_input(t['nitrogen'], value=st.session_state.user_data['N'], min_value=0.0, step=0.1)
+        P = st.sidebar.number_input(t['phosphorus'], value=st.session_state.user_data['P'], min_value=0.0, step=0.1)
+        K = st.sidebar.number_input(t['potassium'], value=st.session_state.user_data['K'], min_value=0.0, step=0.1)
         temperature = st.sidebar.number_input(t['temperature'], value=st.session_state.user_data['temperature'], min_value=-50.0, max_value=50.0, step=0.1)
         humidity = st.sidebar.number_input(t['humidity'], value=st.session_state.user_data['humidity'], min_value=0.0, max_value=100.0, step=0.1)
         ph = st.sidebar.number_input(t['ph'], value=st.session_state.user_data['ph'], min_value=0.0, max_value=14.0, step=0.1)
@@ -155,50 +156,54 @@ elif st.session_state.page == t['input_params']:
     st.markdown("<br>", unsafe_allow_html=True)
 
     if st.button(t['Recommend']):
-        result = {}
-        for name, model in models.items():
-            pred = model.predict(input_df)
-            result[name] = pred[0]
+        # Check if any of the inputs are None
+        if any(value is None for value in input_df.iloc[0].values):
+            st.warning(t['enter_inputs'])
+        else:
+            result = {}
+            for name, model in models.items():
+                pred = model.predict(input_df)
+                result[name] = pred[0]
 
-        # Determine the recommended crop based on the Random Forest model's prediction
-        recommended_crop = result['Random Forest']
-        st.session_state.result = recommended_crop
+            # Determine the recommended crop based on the Random Forest model's prediction
+            recommended_crop = result['Random Forest']
+            st.session_state.result = recommended_crop
 
-        crop_images = {
-            'rice': 'rice.jpg',
-            'maize': 'maize.jpg',
-            'chickpea': 'chickpea.jpg',
-            'kidneybeans': 'Kidney Beans..jpg',
-            'pigeonpeas': 'Pigeon-Peas.jpg',
-            'mothbeans': 'moth beans.jpg',
-            'mungbean': 'mung beans.jfif',
-            'blackgram': 'blackgram.jpg',
-            'lentil': 'lentil.jpg',
-            'pomegranate': 'Pomegranate.jpg',
-            'banana': 'banana.jfif',
-            'mango': 'mango.jfif',
-            'grapes': 'grapes.jpg',
-            'watermelon': 'Watermelon.jpg',
-            'muskmelon': 'muskmelon.jpg',
-            'apple': 'apple.jfif',
-            'orange': 'orange.jpg',
-            'papaya': 'papaya.jfif',
-            'coconut': 'coconut.jfif',
-            'cotton': 'cotton.jfif',
-            'jute': 'jute.jfif',
-            'coffee': 'coffee.jfif'
-        }
+            crop_images = {
+                'rice': 'rice.jpg',
+                'maize': 'maize.jpg',
+                'chickpea': 'chickpea.jpg',
+                'kidneybeans': 'Kidney Beans..jpg',
+                'pigeonpeas': 'Pigeon-Peas.jpg',
+                'mothbeans': 'moth beans.jpg',
+                'mungbean': 'mung beans.jfif',
+                'blackgram': 'blackgram.jpg',
+                'lentil': 'lentil.jpg',
+                'pomegranate': 'Pomegranate.jpg',
+                'banana': 'banana.jfif',
+                'mango': 'mango.jfif',
+                'grapes': 'grapes.jpg',
+                'watermelon': 'Watermelon.jpg',
+                'muskmelon': 'muskmelon.jpg',
+                'apple': 'apple.jfif',
+                'orange': 'orange.jpg',
+                'papaya': 'papaya.jfif',
+                'coconut': 'coconut.jfif',
+                'cotton': 'cotton.jfif',
+                'jute': 'jute.jfif',
+                'coffee': 'coffee.jfif'
+            }
 
-        # Get the crop image URL from the mapping
-        st.session_state.result_crop = crop_images.get(recommended_crop, 'default.jpg')
+            # Get the crop image URL from the mapping
+            st.session_state.result_crop = crop_images.get(recommended_crop, 'default.jpg')
 
-        # Store the new prediction
-        new_prediction = input_df.copy()
-        new_prediction['prediction'] = recommended_crop
-        st.session_state.predictions_history = pd.concat([st.session_state.predictions_history, new_prediction], ignore_index=True)
+            # Store the new prediction
+            new_prediction = input_df.copy()
+            new_prediction['prediction'] = recommended_crop
+            st.session_state.predictions_history = pd.concat([st.session_state.predictions_history, new_prediction], ignore_index=True)
 
-        # Navigate to the result page
-        st.session_state.page = 'result'
+            # Navigate to the result page
+            st.session_state.page = 'result'
 
 if st.session_state.page == 'result':
     st.markdown(f"""
