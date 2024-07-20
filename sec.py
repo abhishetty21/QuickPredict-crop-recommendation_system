@@ -8,10 +8,6 @@ hide_st_style = """
             header {visibility: hidden;}
             </style>
             """
-<<<<<<< HEAD
-=======
-st.markdown(hide_st_style, unsafe_allow_html=True)
->>>>>>> 7bde276202dea24c9424153aa782a937c808ee72
 # Load models
 models = {}
 algo = ['Naive Bayes', 'Decision Tree', 'Random Forest']
