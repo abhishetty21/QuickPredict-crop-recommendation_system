@@ -1,7 +1,13 @@
 import streamlit as st
 import pandas as pd
 import pickle as pi
-
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
 # Load models
 models = {}
 algo = ['Naive Bayes', 'Decision Tree', 'Random Forest']
@@ -193,6 +199,6 @@ elif st.session_state.page == t['input_params']:
 
 if st.session_state.page == 'result':
     st.markdown(f"""
-        <h2 style='text-align: center; color: #4CAF50; font-size: 36px; font-family: Arial, sans-serif;'>{t['recommended_crop']}: {st.session_state.result}</h2>
+        <h2 style='text-align: center; color: #4CAF50; font-size: 36px; font-family: Arial, sans-serif;'>{st.session_state.result}</h2>
     """, unsafe_allow_html=True)
     st.image(st.session_state.result_crop, use_column_width=True)
