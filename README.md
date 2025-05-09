@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ▶️ How to Run
 To start the Streamlit app, run the following command in your terminal:
 
-streamlit run sec.py
+streamlit run app.py
 The app will open in your default web browser at http://localhost:8501.
 
 🧪 Sample Inputs
@@ -56,6 +56,6 @@ Rainfall: e.g., 200
 📊 Output
 After entering the above values, the system will predict the most suitable crop for cultivation under those conditions, e.g., "Rice".
 
-👨‍💻 Contributors
+👨‍💻 Contributor
 Abhishek A Shetty 
 shettyabhi0318@gmail.com
